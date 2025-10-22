@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ticket Booking System</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <h1>🎟️ Ticket Booking Portal</h1>
+    </header>
+
+    <main>
+        <section class="booking-form">
+            <h2>Book Your Tickets</h2>
+            <form id="ticketForm">
+                <div class="form-group">
+                    <label for="name">Full Name</label>
+                    <input type="text" id="name" placeholder="Enter your full name" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="email">Email Address</label>
+                    <input type="email" id="email" placeholder="example@gmail.com" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="event">Select Event</label>
+                    <select id="event" required>
+                        <option value="">-- Choose an Event --</option>
+                        <option value="concert">Music Concert</option>
+                        <option value="movie">Movie Show</option>
+                        <option value="sports">Sports Match</option>
+                        <option value="theatre">Theatre Play</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="date">Select Date</label>
+                    <input type="date" id="date" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="tickets">No. of Tickets</label>
+                    <input type="number" id="tickets" min="1" max="10" required>
+                </div>
+
+                <button type="submit" class="btn">Book Tickets</button>
+            </form>
+        </section>
+
+        <section class="summary" id="summary">
+            <h2>Booking Summary</h2>
+            <p id="summaryText">No bookings yet.</p>
+        </section>
+    </main>
+
+    <footer>
+        <p>© 2025 Ticket Booking Portal | Designed by Poojitha</p>
+    </footer>
+
+    <script>
+        const form = document.getElementById('ticketForm');
+        const summary = document.getElementById('summaryText');
+
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+
+            const name = document.getElementById('name').value;
+            const email = document.getElementById('email').value;
+            const event = document.getElementById('event').value;
+            const date = document.getElementById('date').value;
+            const tickets = document.getElementById('tickets').value;
+
+            summary.innerHTML = `
+                ✅ <b>Booking Successful!</b><br>
+                <b>Name:</b> ${name}<br>
+                <b>Email:</b> ${email}<br>
+                <b>Event:</b> ${event}<br>
+                <b>Date:</b> ${date}<br>
+                <b>Tickets:</b> ${tickets}
+            `;
+
+            form.reset();
+        });
+    </script>
+</body>
+</html>
