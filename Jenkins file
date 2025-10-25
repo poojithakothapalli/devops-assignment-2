@@ -1,0 +1,59 @@
+pipeline {
+    agent any
+
+    environment {
+        // Docker image name and tag
+        IMAGE_NAME = "poojitha/ticket-booking-app"
+        IMAGE_TAG = "latest"
+    }
+
+    stages {
+
+        stage('Checkout Code') {
+            steps {
+                echo "📦 Checking out source code from GitHub..."
+                git branch: 'main', url: 'https://github.com/poojitha/ticket-booking-app.git'
+            }
+        }
+
+        stage('Build Docker Image') {
+            steps {
+                echo "🐳 Building Docker image..."
+                sh 'docker build -t $IMAGE_NAME:$IMAGE_TAG .'
+            }
+        }
+
+        stage('Push to Docker Hub') {
+            steps {
+                echo "📤 Pushing image to Docker Hub..."
+                withCredentials([usernamePassword(credentialsId: 'dockerhub-creds', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
+                    sh '''
+                        echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
+                        docker push $IMAGE_NAME:$IMAGE_TAG
+                        docker logout
+                    '''
+                }
+            }
+        }
+
+        stage('Deploy to Kubernetes') {
+            steps {
+                echo "🚀 Deploying to Kubernetes cluster..."
+                sh '''
+                    kubectl apply -f deployment.yaml
+                    kubectl apply -f service.yaml
+                    kubectl get pods
+                '''
+            }
+        }
+    }
+
+    post {
+        success {
+            echo "✅ Deployment successful!"
+        }
+        failure {
+            echo "❌ Deployment failed! Check the logs."
+        }
+    }
+}
